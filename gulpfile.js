@@ -19,7 +19,8 @@ const minify = () => {
 const push = series(minify, publish);
 module.exports = {
   minify,
-  push
+  push,
+  publish
 }
 // gulp.task('publish', () => {
 //   return gulp.src('./_book/**/*')
