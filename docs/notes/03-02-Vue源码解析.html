@@ -1,0 +1,918 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>03-02-Vue源码解析 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="../" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    目录
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="03-02-Vue源码解析.html">
+            
+                <a href="03-02-Vue源码解析.html">
+            
+                    
+                    03-02-Vue源码解析
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >03-02-Vue源码解析</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="vuejs-&#x6E90;&#x7801;&#x5206;&#x6790;&#xFF08;&#x54CD;&#x5E94;&#x5F0F;&#x3001;&#x865A;&#x62DF;-dom&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x548C;&#x7EC4;&#x4EF6;&#x5316;&#xFF09;">Vue.js &#x6E90;&#x7801;&#x5206;&#x6790;&#xFF08;&#x54CD;&#x5E94;&#x5F0F;&#x3001;&#x865A;&#x62DF; DOM&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x548C;&#x7EC4;&#x4EF6;&#x5316;&#xFF09;</h1>
+<h2 id="vuejs-&#x6E90;&#x7801;&#x5256;&#x6790;-&#x54CD;&#x5E94;&#x5F0F;&#x539F;&#x7406;">Vue.js &#x6E90;&#x7801;&#x5256;&#x6790;-&#x54CD;&#x5E94;&#x5F0F;&#x539F;&#x7406;</h2>
+<h3 id="&#x4E00;&#x3001;&#x51C6;&#x5907;&#x5DE5;&#x4F5C;">&#x4E00;&#x3001;&#x51C6;&#x5907;&#x5DE5;&#x4F5C;</h3>
+<h4 id="1-vue-&#x6E90;&#x7801;&#x7684;&#x83B7;&#x53D6;">1. Vue &#x6E90;&#x7801;&#x7684;&#x83B7;&#x53D6;</h4>
+<ul>
+<li>&#x9879;&#x76EE;&#x5730;&#x5740;&#xFF1A;<a href="https://github.com/vuejs/vue" target="_blank">https://github.com/vuejs/vue</a></li>
+<li>Fork &#x4E00;&#x4EFD;&#x5230;&#x81EA;&#x5DF1;&#x4ED3;&#x5E93;&#xFF0C;&#x514B;&#x9686;&#x5230;&#x672C;&#x5730;&#xFF0C;&#x53EF;&#x4EE5;&#x81EA;&#x5DF1;&#x5199;&#x6CE8;&#x91CA;&#x63D0;&#x4EA4;&#x5230; GitHub</li>
+<li>&#x4E3A;&#x4EC0;&#x4E48;&#x5206;&#x6790; Vue2.6<ul>
+<li>&#x5230;&#x76EE;&#x524D;&#x4E3A;&#x6B62; Vue3.0 &#x7684;&#x6B63;&#x5F0F;&#x7248;&#x8FD8;&#x6CA1;&#x6709;&#x53D1;&#x5E03;</li>
+<li>&#x65B0;&#x7248;&#x672C;&#x53D1;&#x5E03;&#x540E;&#xFF0C;&#x73B0;&#x6709;&#x9879;&#x76EE;&#x4E0D;&#x4F1A;&#x5347;&#x7EA7;&#x5230; 3.0&#xFF0C;2.x &#x8FD8;&#x6709;&#x5F88;&#x957F;&#x7684;&#x4E00;&#x6BB5;&#x8FC7;&#x6E21;&#x671F;</li>
+<li>3.0 &#x9879;&#x76EE;&#x5730;&#x5740;&#xFF1A;<a href="http://github.com/vuejs/vue-next" target="_blank">http://github.com/vuejs/vue-next</a></li>
+</ul>
+</li>
+</ul>
+<h4 id="2-&#x6E90;&#x7801;&#x76EE;&#x5F55;&#x7ED3;&#x6784;">2. &#x6E90;&#x7801;&#x76EE;&#x5F55;&#x7ED3;&#x6784;</h4>
+<blockquote>
+<p>src</p>
+<p>|&#x2014;&#x2014;compiler &#x7F16;&#x8BD1;&#x76F8;&#x5173;</p>
+<p>|&#x2014;&#x2014;core Vue &#x6838;&#x5FC3;&#x5E93;</p>
+<p>|&#x2014;&#x2014;platforms &#x5E73;&#x53F0;&#x76F8;&#x5173;&#x4EE3;&#x7801;</p>
+<p>|&#x2014;&#x2014;server SSR&#x3001;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x6E32;&#x67D3;</p>
+<p>|&#x2014;&#x2014;sfc .vue &#x6587;&#x4EF6;&#x7F16;&#x8BD1;&#x4E3A; js &#x5BF9;&#x8C61;</p>
+<p>|&#x2014;&#x2014;shared &#x516C;&#x5171;&#x7684; diamante</p>
+</blockquote>
+<h4 id="3-&#x4E86;&#x89E3;-flow">3. &#x4E86;&#x89E3; Flow</h4>
+<ul>
+<li>&#x5B98;&#x7F51;&#xFF1A;<a href="https://flow.org/" target="_blank">https://flow.org/</a></li>
+<li>JavaScript &#x7684;&#x9759;&#x6001;&#x7C7B;&#x578B;&#x68C0;&#x67E5;&#x5668;</li>
+<li>Flow &#x7684;&#x9759;&#x6001;&#x7C7B;&#x578B;&#x68C0;&#x67E5;&#x9519;&#x8BEF;&#x662F;&#x901A;&#x8FC7;&#x9759;&#x6001;&#x7C7B;&#x578B;&#x63A8;&#x65AD;&#x5B9E;&#x73B0;&#x7684;<ul>
+<li>&#x6587;&#x4EF6;&#x5F00;&#x5934;&#x901A;&#x8FC7; <code>// @flow</code> &#x6216;&#x8005; <code>/* @flow */</code>&#x58F0;&#x660E;</li>
+</ul>
+</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-comment">/* @flow */</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">n: number</span>): <span class="hljs-title">number</span> </span>{
+  <span class="hljs-keyword">return</span> n * n;
+}
+square(<span class="hljs-string">&quot;2&quot;</span>); <span class="hljs-comment">// Error!</span>
+</code></pre>
+<h4 id="4-&#x8C03;&#x8BD5;&#x8BBE;&#x7F6E;">4. &#x8C03;&#x8BD5;&#x8BBE;&#x7F6E;</h4>
+<h5 id="1-&#x6253;&#x5305;">(1). &#x6253;&#x5305;</h5>
+<ul>
+<li><p>&#x6253;&#x5305;&#x5DE5;&#x5177; Rollup</p>
+<ul>
+<li>Vue.js &#x6E90;&#x7801;&#x7684;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x4F7F;&#x7528;&#x65F6; Rollup&#xFF0C;&#x6BD4; Webpack &#x8F7B;&#x91CF;</li>
+<li>Webpack &#x628A;&#x6240;&#x6709;&#x6587;&#x4EF6;&#x5F53;&#x505A;&#x6A21;&#x5757;&#xFF0C;Rollup &#x53EA;&#x5904;&#x7406; js &#x6587;&#x4EF6;&#xFF0C;&#x66F4;&#x9002;&#x5408;&#x5728; Vue.js &#x8FD9;&#x6837;&#x7684;&#x5E93;&#x4E2D;&#x4F7F;&#x7528;</li>
+<li>Rollup &#x6253;&#x5305;&#x4E0D;&#x4F1A;&#x751F;&#x6210;&#x5197;&#x4F59;&#x7684;&#x4EE3;&#x7801;</li>
+</ul>
+</li>
+<li><p>&#x5B89;&#x88C5;&#x4F9D;&#x8D56;</p>
+<pre><code class="lang-sh">yarn
+</code></pre>
+</li>
+<li><p>&#x8BBE;&#x7F6E; sourcemap</p>
+<ul>
+<li>package.json &#x6587;&#x4EF6;&#x4E2D;&#x7684; dev &#x811A;&#x672C;&#x4E2D;&#x6DFB;&#x52A0;&#x53C2;&#x6570; --sourcemap</li>
+</ul>
+<pre><code class="lang-json"><span class="hljs-string">&quot;dev&quot;</span>: <span class="hljs-string">&quot;rollup -w -c scripts/config.js --sourcemap --environment TARGET:web-full-dev&quot;</span>
+</code></pre>
+</li>
+<li><p>&#x6267;&#x884C; dev</p>
+<ul>
+<li><code>yarn dev</code>&#x6267;&#x884C;&#x6253;&#x5305;&#xFF0C;&#x7528;&#x7684;&#x662F; Rollup&#xFF0C;-w &#x53C2;&#x6570;&#x662F;&#x76D1;&#x542C;&#x6587;&#x4EF6;&#x7684;&#x53D8;&#x5316;&#xFF0C;&#x6587;&#x4EF6;&#x53D8;&#x5316;&#x81EA;&#x52A8;&#x91CD;&#x65B0;&#x6253;&#x5305;</li>
+<li>&#x7ED3;&#x679C;: &#x751F;&#x6210;&#x4E86; dist &#x76EE;&#x5F55;</li>
+</ul>
+</li>
+<li><p>&#x6267;&#x884C; build</p>
+<ul>
+<li><code>yarn build</code>&#x751F;&#x6210;&#x4E86;&#x4E0D;&#x540C;&#x7248;&#x672C;&#x7684; Vue</li>
+</ul>
+</li>
+</ul>
+<h3 id="&#x4E8C;&#x3001;-vue-&#x7684;&#x4E0D;&#x540C;&#x6784;&#x5EFA;&#x7248;&#x672C;">&#x4E8C;&#x3001; Vue &#x7684;&#x4E0D;&#x540C;&#x6784;&#x5EFA;&#x7248;&#x672C;</h3>
+<h4 id="1-vue-&#x7684;&#x4E0D;&#x540C;&#x6784;&#x5EFA;&#x7248;&#x672C;">1. Vue &#x7684;&#x4E0D;&#x540C;&#x6784;&#x5EFA;&#x7248;&#x672C;</h4>
+<ul>
+<li><code>npm run build</code> &#x91CD;&#x65B0;&#x6253;&#x5305;&#x6240;&#x6709;&#x6587;&#x4EF6;</li>
+<li>&#x5B98;&#x65B9;&#x6587;&#x6863;-<a href="[https:/cn.vuejs.org/v2/guide/installation.html#%E5%AF%B9%E4%B8%8D%E5%90%8C%E6%9E%84%E5%BB%BA%E7%89%88%E6%9C%AC%E7%9A%84%E8%A7%A3%E9%87%8A](https://cn.vuejs.org/v2/guide/installation.html#&#x5BF9;&#x4E0D;&#x540C;&#x6784;&#x5EFA;&#x7248;&#x672C;&#x7684;&#x89E3;&#x91CA;">&#x5BF9;&#x4E0D;&#x540C;&#x6784;&#x5EFA;&#x7248;&#x672C;&#x7684;&#x89E3;&#x91CA;</a>&gt;)</li>
+<li>dist/README.md</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">UMD</th>
+<th>CommonJS</th>
+<th>ES Module<br>(&#x57FA;&#x4E8E;&#x6784;&#x5EFA;&#x5DE5;&#x5177;&#x4F7F;&#x7528;)</th>
+<th>ES Module<br>(&#x76F4;&#x63A5;&#x7528;&#x4E8E;&#x6D4F;&#x89C8;&#x5668;)</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>&#x5B8C;&#x6574;&#x7248;</strong></td>
+<td>vue.js</td>
+<td>vue.common.js</td>
+<td>vue.esm.js</td>
+<td>vue.esm.browser.js</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>&#x53EA;&#x5305;&#x542B;&#x8FD0;&#x884C;&#x65F6;&#x7248;</strong></td>
+<td>vue.runtime.js</td>
+<td>vue.runtime.common.js</td>
+<td>vue.runtime.esm.js</td>
+<td>-</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>&#x5B8C;&#x6574;&#x7248;(&#x751F;&#x4EA7;&#x73AF;&#x5883;)</strong></td>
+<td>vue.min.js</td>
+<td>-</td>
+<td>-</td>
+<td>vue.esm.browser.min.js</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>&#x53EA;&#x5305;&#x542B;&#x8FD0;&#x884C;&#x65F6;&#x7248;(&#x751F;&#x4EA7;&#x73AF;&#x5883;)</strong></td>
+<td>vue.runtime.min.js</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-&#x672F;&#x8BED;">2. &#x672F;&#x8BED;</h4>
+<ul>
+<li><strong>&#x5B8C;&#x6574;&#x7248;</strong>&#xFF1A;&#x540C;&#x65F6;&#x5305;&#x542B;&#x7F16;&#x8BD1;&#x5668;&#x548C;&#x8FD0;&#x884C;&#x65F6;&#x7684;&#x7248;&#x672C;&#x3002;</li>
+<li><strong>&#x7F16;&#x8BD1;&#x5668;</strong>&#xFF1A;&#x7528;&#x6765;&#x5C06;&#x6A21;&#x677F;&#x5B57;&#x7B26;&#x4E32;&#x7F16;&#x8BD1;&#x6210;&#x4E3A; JavaScript &#x6E32;&#x67D3;&#x51FD;&#x6570;&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x4F53;&#x79EF;&#x5927;&#xFF0C;&#x6548;&#x7387;&#x4F4E;&#x3002;</li>
+<li><strong>&#x8FD0;&#x884C;&#x65F6;</strong>&#xFF1A;&#x7528;&#x6765;&#x521B;&#x5EFA; Vue &#x5B9E;&#x4F8B;&#x3001;&#x6E32;&#x67D3;&#x5E76;&#x5904;&#x7406;&#x865A;&#x62DF; DOM &#x7B49;&#x7684;&#x4EE3;&#x7801;&#x3002;&#x4F53;&#x79EF;&#x5C0F;&#xFF0C;&#x6548;&#x7387;&#x9AD8;&#xFF0C;&#x57FA;&#x672C;&#x4E0A;&#x5C31;&#x662F;&#x9664;&#x53BB;&#x7F16;&#x8BD1;&#x5668;&#x7684;&#x5176;&#x5B83;&#x4E00;&#x5207;&#x3002;</li>
+<li><strong><a href="https://github.com/umdjs/umd" target="_blank">UMD</a></strong>&#xFF1A;&#x901A;&#x7528;&#x7684;&#x6A21;&#x5757;&#x7248;&#x672C;&#xFF0C;&#x652F;&#x6301;&#x591A;&#x79CD;&#x6A21;&#x5757;&#x65B9;&#x5F0F;&#x3002;UMD &#x7248;&#x672C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; <code>&lt;script&gt;</code> &#x6807;&#x7B7E;&#x76F4;&#x63A5;&#x7528;&#x5728;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#x3002;jsDelivr CDN &#x7684; <a href="https://cdn.jsdelivr.net/npm/vue" target="_blank">https://cdn.jsdelivr.net/npm/vue</a> &#x9ED8;&#x8BA4;&#x6587;&#x4EF6;&#x5C31;&#x662F;&#x8FD0;&#x884C;&#x65F6; + &#x7F16;&#x8BD1;&#x5668;&#x7684; UMD &#x7248;&#x672C; (<code>vue.js</code>)&#x3002;</li>
+<li><strong><a href="http://wiki.commonjs.org/wiki/Modules/1.1" target="_blank">CommonJS</a></strong>&#xFF1A;CommonJS &#x7248;&#x672C;&#x7528;&#x6765;&#x914D;&#x5408;&#x8001;&#x7684;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x6BD4;&#x5982; <a href="http://browserify.org/" target="_blank">Browserify</a> &#x6216; <a href="https://webpack.github.io/" target="_blank">webpack 1</a>&#x3002;&#x8FD9;&#x4E9B;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x7684;&#x9ED8;&#x8BA4;&#x6587;&#x4EF6; (<code>pkg.main</code>) &#x662F;&#x53EA;&#x5305;&#x542B;&#x8FD0;&#x884C;&#x65F6;&#x7684; CommonJS &#x7248;&#x672C; (<code>vue.runtime.common.js</code>)&#x3002;</li>
+<li><strong><a href="http://exploringjs.com/es6/ch_modules.html" target="_blank">ES Module</a></strong>&#xFF1A;&#x4ECE; 2.6 &#x5F00;&#x59CB; Vue &#x4F1A;&#x63D0;&#x4F9B;&#x4E24;&#x4E2A; ES Modules (ESM) &#x6784;&#x5EFA;&#x6587;&#x4EF6;&#xFF1A;<ul>
+<li>&#x4E3A;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x63D0;&#x4F9B;&#x7684; ESM&#xFF1A;&#x4E3A;&#x8BF8;&#x5982; <a href="https://webpack.js.org/" target="_blank">webpack 2</a> &#x6216; <a href="https://rollupjs.org/" target="_blank">Rollup</a> &#x63D0;&#x4F9B;&#x7684;&#x73B0;&#x4EE3;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x3002;ESM &#x683C;&#x5F0F;&#x88AB;&#x8BBE;&#x8BA1;&#x4E3A;&#x53EF;&#x4EE5;&#x88AB;&#x9759;&#x6001;&#x5206;&#x6790;&#xFF0C;&#x6240;&#x4EE5;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x53EF;&#x4EE5;&#x5229;&#x7528;&#x8FD9;&#x4E00;&#x70B9;&#x6765;&#x8FDB;&#x884C;&#x201C;tree-shaking&#x201D;&#x5E76;&#x5C06;&#x7528;&#x4E0D;&#x5230;&#x7684;&#x4EE3;&#x7801;&#x6392;&#x9664;&#x51FA;&#x6700;&#x7EC8;&#x7684;&#x5305;&#x3002;&#x4E3A;&#x8FD9;&#x4E9B;&#x6253;&#x5305;&#x5DE5;&#x5177;&#x63D0;&#x4F9B;&#x7684;&#x9ED8;&#x8BA4;&#x6587;&#x4EF6; (<code>pkg.module</code>) &#x662F;&#x53EA;&#x6709;&#x8FD0;&#x884C;&#x65F6;&#x7684; ES Module &#x6784;&#x5EFA; (<code>vue.runtime.esm.js</code>)&#x3002;</li>
+<li>&#x4E3A;&#x6D4F;&#x89C8;&#x5668;&#x63D0;&#x4F9B;&#x7684; ESM (2.6+)&#xFF1A;&#x7528;&#x4E8E;&#x5728;&#x73B0;&#x4EE3;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#x901A;&#x8FC7; <code>&lt;script type=&quot;module&quot;&gt;</code> &#x76F4;&#x63A5;&#x5BFC;&#x5165;&#x3002;</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>vue &#x811A;&#x624B;&#x67B6;&#x521B;&#x5EFA;&#x7684; Vue &#x9879;&#x76EE;&#x4E2D;&#xFF0C;&#x5F15;&#x7528;&#x7684; Vue &#x7248;&#x672C;&#x5C31;&#x662F;&#x8FD0;&#x884C;&#x65F6;&#x7248;&#x672C;&#xFF1A;vue.runtime.esm.js</p>
+<p>&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5728; Vue &#x9879;&#x76EE;&#x4E2D;&#x6267;&#x884C;&#xFF1A;<code>vue inspect &gt; output.js</code>&#xFF0C;&#x5C06; webpack &#x914D;&#x7F6E;&#x8F93;&#x51FA;&#x5230; output.js &#x6587;&#x4EF6;&#x4E2D;&#x67E5;&#x770B;&#xFF0C;</p>
+<pre><code class="lang-js">resolve: {
+    alias: {
+      <span class="hljs-string">&apos;@&apos;</span>: <span class="hljs-string">&apos;/Users/mac/JALProjects/lagou-fed/fed-e-task-03-02/code/01-demo/src&apos;</span>,
+      vue$: <span class="hljs-string">&apos;vue/dist/vue.runtime.esm.js&apos;</span>
+    },
+}
+</code></pre>
+</blockquote>
+<h3 id="&#x4E09;&#x3001;-&#x5BFB;&#x627E;&#x5165;&#x53E3;&#x6587;&#x4EF6;">&#x4E09;&#x3001; &#x5BFB;&#x627E;&#x5165;&#x53E3;&#x6587;&#x4EF6;</h3>
+<p>&#x67E5;&#x770B; dist/vue.js &#x7684;&#x6784;&#x5EFA;&#x8FC7;&#x7A0B;</p>
+<p>&#x6267;&#x884C;&#x6784;&#x5EFA;&#xFF1A; <code>yarn dev</code></p>
+<h3 id="&#x56DB;&#x3001;-&#x4ECE;&#x5165;&#x53E3;&#x5F00;&#x59CB;">&#x56DB;&#x3001; &#x4ECE;&#x5165;&#x53E3;&#x5F00;&#x59CB;</h3>
+<p>src/platform/web/entry-runtime-with-compiler.js</p>
+<p>&#x901A;&#x8FC7;&#x67E5;&#x770B;&#x6E90;&#x7801;&#x89E3;&#x51B3;&#x4E0B;&#x9762;&#x95EE;&#x9898;&#xFF1A;</p>
+<h4 id="1-&#x95EE;&#xFF1A;&#x89C2;&#x5BDF;&#x4E00;&#x4E0B;&#x4EE3;&#x7801;&#xFF0C;&#x901A;&#x8FC7;&#x9605;&#x8BFB;&#x6E90;&#x7801;&#xFF0C;&#x56DE;&#x7B54;&#x5728;&#x9875;&#x9762;&#x4E0A;&#x8F93;&#x51FA;&#x7684;&#x7ED3;&#x679C;">1. &#x95EE;&#xFF1A;&#x89C2;&#x5BDF;&#x4E00;&#x4E0B;&#x4EE3;&#x7801;&#xFF0C;&#x901A;&#x8FC7;&#x9605;&#x8BFB;&#x6E90;&#x7801;&#xFF0C;&#x56DE;&#x7B54;&#x5728;&#x9875;&#x9762;&#x4E0A;&#x8F93;&#x51FA;&#x7684;&#x7ED3;&#x679C;</h4>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> vm = <span class="hljs-keyword">new</span> Vue({
+  el: <span class="hljs-string">&quot;#app&quot;</span>,
+  template: <span class="hljs-string">&quot;&lt;h1&gt;Hello template &lt;/h1&gt;&quot;</span>,
+  render(h) {
+    <span class="hljs-keyword">return</span> h(<span class="hljs-string">&quot;h4&quot;</span>, <span class="hljs-string">&quot;Hello render&quot;</span>);
+  },
+});
+</code></pre>
+<p>&#x7B54;&#xFF1A;&#x662F;&#x4F18;&#x5148;&#x4F7F;&#x7528; render</p>
+<p><img src="../images/03-02/01.png" alt="&#x4F18;&#x5148;&#x4F7F;&#x7528;render&#x7684;&#x6E90;&#x7801;" style="zoom:50%;"></p>
+<h4 id="2-&#x95EE;&#xFF1A;mount-&#x662F;&#x5728;&#x4EC0;&#x4E48;&#x65F6;&#x5019;&#x8C03;&#x7528;&#x7684;&#xFF1F;">2. &#x95EE;&#xFF1A;$mount &#x662F;&#x5728;&#x4EC0;&#x4E48;&#x65F6;&#x5019;&#x8C03;&#x7528;&#x7684;&#xFF1F;</h4>
+<p>&#x7B54;&#xFF1A;&#x662F;&#x5728; init &#x65B9;&#x6CD5;&#x4E2D;&#x8C03;&#x7528;&#x7684;&#xFF0C;&#x53EF;&#x4EE5;&#x5728;$mount &#x51FD;&#x6570;&#x5B9A;&#x4E49;&#x7684;&#x5730;&#x65B9;&#x6253;&#x65AD;&#x70B9;&#xFF0C;&#x7136;&#x540E;&#x770B;&#x8C03;&#x7528;&#x6808;&#x7684;&#x51FD;&#x6570;</p>
+<p><img src="../images/03-02/02.png" alt="02"></p>
+<h4 id="3-&#x5B66;&#x4E60;&#x6E90;&#x7801;&#x8BB0;&#x5F55;">3. &#x5B66;&#x4E60;&#x6E90;&#x7801;&#x8BB0;&#x5F55;</h4>
+<ul>
+<li>el &#x4E0D;&#x80FD;&#x662F; body &#x6216;&#x8005;&#x662F; html &#x6807;&#x7B7E;</li>
+<li>&#x5982;&#x679C;&#x6CA1;&#x6709; render&#xFF0C;&#x628A; template &#x8F6C;&#x6362;&#x6210; render &#x51FD;&#x6570;</li>
+<li>&#x5982;&#x679C;&#x6709; render &#x65B9;&#x6CD5;&#xFF0C;&#x76F4;&#x63A5;&#x8C03;&#x7528; mount &#x6302;&#x8F7D; DOM</li>
+</ul>
+<h4 id="4-&#x8C03;&#x8BD5;&#x4EE3;&#x7801;">4. &#x8C03;&#x8BD5;&#x4EE3;&#x7801;</h4>
+<ul>
+<li><p>&#x8C03;&#x8BD5;&#x7684;&#x65B9;&#x6CD5;</p>
+<ul>
+<li>&#x67E5;&#x770B;&#x6D4F;&#x89C8;&#x5668;&#x5F00;&#x53D1;&#x4EBA;&#x5458;&#x5DE5;&#x5177;&#x91CC; Sources &#x7684; CallStack &#x8C03;&#x7528;&#x5806;&#x6808;</li>
+</ul>
+<blockquote>
+<p>Vue &#x7684;&#x6784;&#x9020;&#x51FD;&#x6570;&#x5728;&#x54EA;&#x4E2A;&#xFF1F;</p>
+<p>Vue &#x5B9E;&#x4F8B;&#x7684;&#x6210;&#x5458;/Vue &#x7684;&#x9759;&#x6001;&#x6210;&#x5458;&#x4ECE;&#x54EA;&#x91CC;&#x6765;&#x7684;&#xFF1F;</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="&#x4E94;&#x3001;vue-&#x7684;&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;">&#x4E94;&#x3001;Vue &#x7684;&#x521D;&#x59CB;&#x5316;&#x8FC7;&#x7A0B;</h3>
+<h4 id="1-&#x56DB;&#x4E2A;&#x5BFC;&#x51FA;-vue-&#x7684;&#x6A21;&#x5757;">1. &#x56DB;&#x4E2A;&#x5BFC;&#x51FA; Vue &#x7684;&#x6A21;&#x5757;</h4>
+<h5 id="1-srcplatformswebentry-runtime-with-compilerjs">(1). src/platforms/web/entry-runtime-with-compilerjs</h5>
+<ul>
+<li><p>web &#x5E73;&#x53F0;&#x76F8;&#x5173;&#x7684;&#x5165;&#x53E3;</p>
+</li>
+<li><p>&#x91CD;&#x5199;&#x4E86;&#x5E73;&#x53F0;&#x76F8;&#x5173;&#x7684;</p>
+</li>
+<li><p><code>$mount()</code>&#x65B9;&#x6CD5;</p>
+</li>
+<li><p>&#x6CE8;&#x518C;&#x4E86; Vue.compile()&#x65B9;&#x6CD5;&#xFF0C;&#x4F20;&#x9012;&#x4E00;&#x4E2A; HTML &#x5B57;&#x7B26;&#x4E32;&#x8FD4;&#x56DE; render &#x51FD;&#x6570;</p>
+</li>
+</ul>
+<h5 id="2-srcplatformswebruntimeindexjs">(2). src/platforms/web/runtime/index.js</h5>
+<ul>
+<li>web &#x5E73;&#x53F0;&#x76F8;&#x5173;</li>
+<li>&#x6CE8;&#x518C;&#x548C;&#x5E73;&#x53F0;&#x76F8;&#x5173;&#x7684;&#x5168;&#x5C40;&#x6307;&#x4EE4;: <code>v-model</code>&#x3001; <code>v-show</code></li>
+<li>&#x6CE8;&#x518C;&#x548C;&#x5E73;&#x53F0;&#x76F8;&#x5173;&#x7684;&#x5168;&#x5C40;&#x7EC4;&#x4EF6;: <code>v- transition</code>,<code>v-transition-group</code></li>
+<li>&#x5168;&#x5C40;&#x65B9;&#x6CD5;:<ul>
+<li><code>_patch_</code>: &#x628A;&#x865A;&#x62DF; DOM &#x8F6C;&#x6362;&#x6210;&#x771F;&#x5B9E; DOM</li>
+<li><code>$mount</code>:&#x6302;&#x8F7D;&#x65B9;&#x6CD5;</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-srccoreindexjs">(3). src/core/index.js</h5>
+<ul>
+<li>&#x4E0E;&#x5E73;&#x53F0;&#x65E0;&#x5173;</li>
+<li>&#x8BBE;&#x7F6E;&#x4E86; Vue &#x7684;&#x9759;&#x6001;&#x65B9;&#x6CD5;&#xFF0C;initGlobalAPl(Vue)</li>
+</ul>
+<h5 id="4-srccoreinstanceindexjs">(4). src/core/instance/index.js</h5>
+<ul>
+<li>&#x4E0E;&#x5E73;&#x53F0;&#x65E0;&#x5173;</li>
+<li>&#x5B9A;&#x4E49;&#x4E86;&#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x8C03;&#x7528;&#x4E86; this.init(options) &#x65B9;&#x6CD5;</li>
+<li>&#x7ED9; Vue &#x4E2D;&#x6DF7;&#x5165;&#x4E86;&#x5E38;&#x7528;&#x7684;&#x5B9E;&#x4F8B;&#x6210;&#x5458;</li>
+</ul>
+<h4 id="2-&#x770B;&#x6E90;&#x7801;&#x4E2D;&#x7684;&#x4E24;&#x4E2A;&#x95EE;&#x9898;">2. &#x770B;&#x6E90;&#x7801;&#x4E2D;&#x7684;&#x4E24;&#x4E2A;&#x95EE;&#x9898;</h4>
+<h5 id="1-&#x5173;&#x95ED;-js-&#x8BED;&#x6CD5;&#x68C0;&#x67E5;&#x7206;&#x7EA2;&#x95EE;&#x9898;">(1) &#x5173;&#x95ED; JS &#x8BED;&#x6CD5;&#x68C0;&#x67E5;&#x7206;&#x7EA2;&#x95EE;&#x9898;</h5>
+<p>&#x5728; vscode &#x7684; settings.json &#x91CC;&#xFF0C;&#x5C06;&quot;javascript.validate.enable&quot;&#x8BBE;&#x4E3A; false</p>
+<h5 id="2-flow-&#x4E2D;&#x7684;&#x6CDB;&#x578B;&#x5F71;&#x54CD;&#x4EE3;&#x7801;&#x7684;&#x9AD8;&#x4EAE;&#x663E;&#x793A;">(2) flow &#x4E2D;&#x7684;&#x6CDB;&#x578B;&#x5F71;&#x54CD;&#x4EE3;&#x7801;&#x7684;&#x9AD8;&#x4EAE;&#x663E;&#x793A;</h5>
+<p>&#x5728; vscode &#x63D2;&#x4EF6;&#x5546;&#x57CE;&#x91CC;&#x5B89;&#x88C5; Babel JavaScript &#x8FD9;&#x4E2A;&#x63D2;&#x4EF6;&#xFF0C;&#x53EF;&#x4EE5;&#x8BA9;&#x6CDB;&#x578B;&#x540E;&#x9762;&#x7684;&#x4EE3;&#x7801;&#x53EF;&#x4EE5;&#x9AD8;&#x4EAE;&#x663E;&#x793A;&#xFF0C;&#x4F46;&#x5931;&#x53BB;&#x4E86;&#x8DF3;&#x8F6C;&#x94FE;&#x63A5;&#x7684;&#x4F5C;&#x7528;</p>
+<p><img src="../images/03-02/03.png" alt="03"></p>
+<h4 id="3-&#x9759;&#x6001;&#x65B9;&#x6CD5;">3. &#x9759;&#x6001;&#x65B9;&#x6CD5;</h4>
+<p>./src/core/global-api/index.js</p>
+<pre><code class="lang-js"><span class="hljs-comment">// &#x8BBE;&#x7F6E;keep-alive&#x7EC4;&#x4EF6;</span>
+extend(Vue.options.components, builtInComponents);
+
+<span class="hljs-comment">// &#x6CE8;&#x518C;Vue.use()&#x7528;&#x6765;&#x6CE8;&#x518C;&#x7EC4;&#x4EF6;</span>
+initUse(Vue);
+<span class="hljs-comment">// &#x6CE8;&#x518C;Vue.mixin()&#x5B9E;&#x73B0;&#x6DF7;&#x5165;</span>
+initMixin(Vue);
+<span class="hljs-comment">// &#x6CE8;&#x518C;Vue.extend()&#x57FA;&#x7840;&#x4F20;&#x5165;&#x7684;options&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x7EC4;&#x4EF6;&#x7684;&#x6784;&#x9020;&#x51FD;&#x6570;</span>
+initExtend(Vue);
+<span class="hljs-comment">// &#x6CE8;&#x518C;Vue.directive()&#x3001;Vue.component()&#x3001;Vue.filter()</span>
+initAssetRegisters(Vue);
+</code></pre>
+<h4 id="4-&#x5B9E;&#x4F8B;&#x6210;&#x5458;">4. &#x5B9E;&#x4F8B;&#x6210;&#x5458;</h4>
+<p>./src/core/instance/index.js</p>
+<pre><code class="lang-js"><span class="hljs-comment">// &#x6CE8;&#x518C;vm&#x7684;_init()&#x65B9;&#x6CD5;&#xFF0C;&#x521D;&#x59CB;&#x5316;vm</span>
+initMixin(Vue);
+<span class="hljs-comment">// &#x6CE8;&#x518C;vm&#x7684;$data/$props/$set/$delete/$watch</span>
+stateMixin(Vue);
+<span class="hljs-comment">// &#x521D;&#x59CB;&#x5316;&#x4E8B;&#x4EF6;&#x76F8;&#x5173;&#x65B9;&#x6CD5;</span>
+<span class="hljs-comment">// $on/$once/$off/$emit</span>
+eventsMixin(Vue);
+<span class="hljs-comment">// &#x521D;&#x59CB;&#x5316;&#x751F;&#x547D;&#x5468;&#x671F;&#x76F8;&#x5173;&#x7684;&#x6DF7;&#x5165;&#x65B9;&#x6CD5;</span>
+<span class="hljs-comment">// _update/$forceUpdate/$destroy</span>
+lifecycleMixin(Vue);
+<span class="hljs-comment">// &#x6DF7;&#x5165;render</span>
+<span class="hljs-comment">// $nextTick/_render</span>
+renderMixin(Vue);
+</code></pre>
+<h4 id="5-&#x6784;&#x9020;&#x51FD;&#x6570;">5. &#x6784;&#x9020;&#x51FD;&#x6570;</h4>
+<p>&#x6784;&#x9020;&#x51FD;&#x6570;&#x4E2D;&#x8C03;&#x7528;&#x4E86; init &#x65B9;&#x6CD5;&#x3002;</p>
+<p>./src/core/instance/init.js</p>
+<pre><code class="lang-js"><span class="hljs-comment">// vm&#x7684;&#x751F;&#x547D;&#x5468;&#x671F;&#x76F8;&#x5173;&#x53D8;&#x91CF;&#x521D;&#x59CB;&#x5316;</span>
+<span class="hljs-comment">// $children/$parent/$root/$refs</span>
+initLifecycle(vm);
+<span class="hljs-comment">// vm&#x7684;&#x4E8B;&#x4EF6;&#x76D1;&#x542C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x7236;&#x7EC4;&#x4EF6;&#x7ED1;&#x5B9A;&#x5728;&#x5F53;&#x524D;&#x7EC4;&#x4EF6;&#x4E0A;&#x7684;&#x4E8B;&#x4EF6;</span>
+initEvents(vm);
+<span class="hljs-comment">// vm&#x7684;&#x7F16;&#x8BD1;render&#x521D;&#x59CB;&#x5316;</span>
+<span class="hljs-comment">// $slots/$scopedSlots/_c/$createElement/$attrs/$listeners</span>
+initRender(vm);
+<span class="hljs-comment">// beforeCreate &#x751F;&#x547D;&#x94A9;&#x5B50;&#x56DE;&#x8C03;</span>
+callHook(vm, <span class="hljs-string">&quot;beforeCreate&quot;</span>);
+<span class="hljs-comment">// &#x628A;inject&#x7684;&#x6210;&#x5458;&#x6CE8;&#x5165;&#x5230;vm&#x4E0A;</span>
+initInjections(vm); <span class="hljs-comment">// resolve injections before data/props</span>
+<span class="hljs-comment">// &#x521D;&#x59CB;&#x5316;vm&#x7684;_props/methods/_data/computed/watch</span>
+initState(vm);
+<span class="hljs-comment">// &#x521D;&#x59CB;&#x5316;provide</span>
+initProvide(vm); <span class="hljs-comment">// resolve provide after data/props</span>
+<span class="hljs-comment">// created &#x751F;&#x547D;&#x94A9;&#x5B50;&#x7684;&#x56DE;&#x8C03;</span>
+callHook(vm, <span class="hljs-string">&quot;created&quot;</span>);
+</code></pre>
+<h4 id="6-&#x9996;&#x6B21;&#x6E32;&#x67D3;&#x8FC7;&#x7A0B;">6. &#x9996;&#x6B21;&#x6E32;&#x67D3;&#x8FC7;&#x7A0B;</h4>
+<p>&#x9996;&#x5148;&#x8FDB;&#x884C; Vue &#x7684;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x521D;&#x59CB;&#x5316; Vue &#x7684;&#x5B9E;&#x4F8B;&#x6210;&#x5458;&#x4EE5;&#x53CA;&#x9759;&#x6001;&#x6210;&#x5458;&#x3002;</p>
+<p>&#x5F53;&#x521D;&#x59CB;&#x5316;&#x7ED3;&#x675F;&#x4E4B;&#x540E;&#xFF0C;&#x5F00;&#x59CB;&#x8C03;&#x7528;&#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x5728;&#x6784;&#x9020;&#x51FD;&#x6570;&#x4E2D;&#x8C03;&#x7528;<code>this._init()</code>&#xFF0C;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x76F8;&#x5F53;&#x4E8E;&#x6211;&#x4EEC;&#x6574;&#x4E2A;<code>Vue</code>&#x7684;&#x5165;&#x53E3;&#x3002;</p>
+<p>&#x5728;<code>_init()</code>&#x4E2D;&#x6700;&#x7EC8;&#x8C03;&#x7528;&#x4E86;<code>this.$mount()</code>&#xFF0C;&#x5171;&#x6709;&#x4E24;&#x4E2A;<code>$mount()</code>&#xFF0C;&#x7B2C;&#x4E00;&#x4E2A;<code>$mount()</code>&#x662F;<code>entry-runtime-with-compiler.js</code>&#x5165;&#x53E3;&#x6587;&#x4EF6;&#x7684;<code>$mount()</code>&#xFF0C;&#x8FD9;&#x4E2A;<code>$mount()</code>&#x7684;&#x6838;&#x5FC3;&#x4F5C;&#x7528;&#x662F;&#x5E2E;&#x6211;&#x4EEC;&#x628A;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x6210;<code>render</code>&#x51FD;&#x6570;&#xFF0C;&#x4F46;&#x5B83;&#x9996;&#x5148;&#x4F1A;&#x5224;&#x65AD;&#x4E00;&#x4E0B;&#x6211;&#x4EEC;&#x5F53;&#x524D;&#x662F;&#x5426;&#x4F20;&#x5165;&#x4E86;<code>render</code>&#x9009;&#x9879;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x4F20;&#x5165;&#x7684;&#x8BDD;&#xFF0C;&#x5B83;&#x4F1A;&#x53BB;&#x83B7;&#x53D6;&#x6211;&#x4EEC;&#x7684;<code>template</code>&#x9009;&#x9879;&#xFF0C;&#x5982;&#x679C;<code>template</code>&#x9009;&#x9879;&#x4E5F;&#x6CA1;&#x6709;&#x7684;&#x8BDD;&#xFF0C;&#x4ED6;&#x4F1A;&#x628A;<code>el</code>&#x4E2D;&#x7684;&#x5185;&#x5BB9;&#x4F5C;&#x4E3A;&#x6211;&#x4EEC;&#x7684;&#x6A21;&#x677F;&#xFF0C;&#x7136;&#x540E;&#x628A;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x6210;<code>render</code>&#x51FD;&#x6570;&#xFF0C;&#x5B83;&#x662F;&#x901A;&#x8FC7;<code>compileToFunctions()</code>&#x51FD;&#x6570;&#xFF0C;&#x5E2E;&#x6211;&#x4EEC;&#x628A;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x6210;<code>render</code>&#x51FD;&#x6570;&#x7684;,&#x5F53;&#x628A;<code>render</code>&#x51FD;&#x6570;&#x7F16;&#x8BD1;&#x597D;&#x4E4B;&#x540E;&#xFF0C;&#x5B83;&#x4F1A;&#x628A;<code>render</code>&#x51FD;&#x6570;&#x5B58;&#x5728;&#x6211;&#x4EEC;&#x7684;<code>options.render</code>&#x4E2D;&#x3002;</p>
+<p>&#x90A3;&#x63A5;&#x4E0B;&#x6765;&#x4F1A;&#x8C03;&#x7528;<code>runtime/index.js</code>&#x4E2D;&#x7684;<code>$mount()</code>&#x65B9;&#x6CD5;&#xFF0C;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x4E2D;,&#x9996;&#x5148;&#x4F1A;&#x91CD;&#x65B0;&#x83B7;&#x53D6;&#x6211;&#x4EEC;&#x7684;<code>el</code>&#xFF0C;&#x56E0;&#x4E3A;&#x5982;&#x679C;&#x662F;&#x8FD0;&#x884C;&#x65F6;&#x7248;&#x672C;&#x7684;&#x8BDD;&#xFF0C;&#x662F;&#x4E0D;&#x4F1A;<code>entry-runtime-with-compiler.js</code>&#x8FD9;&#x4E2A;&#x5165;&#x53E3;&#x4E2D;&#x83B7;&#x53D6;<code>el</code>&#xFF0C;&#x6240;&#x4EE5;&#x5982;&#x679C;&#x662F;&#x8FD0;&#x884C;&#x65F6;&#x7248;&#x672C;&#x7684;&#x8BDD;&#xFF0C;&#x6211;&#x4EEC;&#x4F1A;&#x5728;<code>runtime/index.js</code>&#x7684;<code>$mount()</code>&#x4E2D;&#x91CD;&#x65B0;&#x83B7;&#x53D6;<code>el</code>&#x3002;</p>
+<p>&#x63A5;&#x4E0B;&#x6765;&#x8C03;&#x7528;<code>mountComponent()</code>,<code>mountComponent()</code>&#x662F;&#x5728;<code>src/core/instance/lifecycle.js</code>&#x4E2D;&#x5B9A;&#x4E49;&#x7684;&#xFF0C;&#x5728;<code>mountComponent()</code>&#x4E2D;&#xFF0C;&#x9996;&#x5148;&#x4F1A;&#x5224;&#x65AD;<code>render</code>&#x9009;&#x9879;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x4F46;&#x662F;&#x4F20;&#x5165;&#x4E86;&#x6A21;&#x677F;&#xFF0C;&#x5E76;&#x4E14;&#x5F53;&#x524D;&#x662F;&#x5F00;&#x53D1;&#x73AF;&#x5883;&#x7684;&#x8BDD;&#x4F1A;&#x53D1;&#x9001;&#x8B66;&#x544A;&#xFF0C;&#x8B66;&#x544A;&#x8FD0;&#x884C;&#x65F6;&#x7248;&#x672C;&#x4E0D;&#x652F;&#x6301;&#x7F16;&#x8BD1;&#x5668;&#x3002;</p>
+<p>&#x63A5;&#x4E0B;&#x6765;&#x4F1A;&#x89E6;&#x53D1;<code>beforeMount</code>&#x8FD9;&#x4E2A;&#x751F;&#x547D;&#x5468;&#x671F;&#x4E2D;&#x7684;&#x94A9;&#x5B50;&#x51FD;&#x6570;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x5F00;&#x59CB;&#x6302;&#x8F7D;&#x4E4B;&#x524D;&#x3002;</p>
+<p>&#x7136;&#x540E;&#x5B9A;&#x4E49;&#x4E86;<code>updateComponent()</code>&#xFF0C;&#x5728;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x4E2D;&#xFF0C;&#x5B9A;&#x4E49;&#x4E86;<code>_render</code>&#x548C;<code>_update</code>&#xFF0C;<code>_render</code>&#x7684;&#x4F5C;&#x7528;&#x662F;&#x751F;&#x6210;&#x865A;&#x62DF; DOM&#xFF0C;<code>_update</code>&#x7684;&#x4F5C;&#x7528;&#x662F;&#x5C06;&#x865A;&#x62DF; DOM &#x8F6C;&#x6362;&#x6210;&#x771F;&#x5B9E; DOM&#xFF0C;&#x5E76;&#x4E14;&#x6302;&#x8F7D;&#x5230;&#x9875;&#x9762;&#x4E0A;&#x6765;&#x3002;</p>
+<p>&#x518D;&#x63A5;&#x4E0B;&#x6765;&#x5C31;&#x662F;&#x521B;&#x5EFA;<code>Watcher</code>&#x5BF9;&#x8C61;&#xFF0C;&#x5728;&#x521B;&#x5EFA;<code>Watcher</code>&#x65F6;&#xFF0C;&#x4F20;&#x9012;&#x4E86;<code>updateComponent</code>&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#xFF0C;&#x8FD9;&#x4E2A;&#x51FD;&#x6570;&#x6700;&#x7EC8;&#x662F;&#x5728;<code>Watcher</code>&#x5185;&#x90E8;&#x8C03;&#x7528;&#x7684;&#x3002;&#x5728;<code>Watcher</code>&#x521B;&#x5EFA;&#x5B8C;&#x4E4B;&#x540E;&#x8FD8;&#x8C03;&#x7528;&#x4E86;<code>get</code>&#x65B9;&#x6CD5;&#xFF0C;&#x5728;<code>get</code>&#x65B9;&#x6CD5;&#x4E2D;&#xFF0C;&#x4F1A;&#x8C03;&#x7528;<code>updateComponent()</code>&#x3002;</p>
+<p>&#x7136;&#x540E;&#x89E6;&#x53D1;&#x4E86;&#x751F;&#x547D;&#x5468;&#x671F;&#x7684;&#x94A9;&#x5B50;&#x51FD;&#x6570;<code>mounted</code>,&#x6302;&#x8F7D;&#x7ED3;&#x675F;&#xFF0C;&#x6700;&#x7EC8;&#x8FD4;&#x56DE;<code>Vue</code>&#x5B9E;&#x4F8B;&#x3002;</p>
+<p><img src="../images/03-02/Vue&#x9996;&#x6B21;&#x6E32;&#x67D3;&#x8FC7;&#x7A0B;.png" alt="../images/03-02/Vue&#x9996;&#x6B21;&#x6E32;&#x67D3;&#x8FC7;&#x7A0B;.png"></p>
+<h4 id="7-&#x54CD;&#x5E94;&#x5F0F;&#x5904;&#x7406;&#x8FC7;&#x7A0B;">7. &#x54CD;&#x5E94;&#x5F0F;&#x5904;&#x7406;&#x8FC7;&#x7A0B;</h4>
+<ul>
+<li>initState() --&gt; initData() --&gt; observe()</li>
+<li>observe(value)<ul>
+<li>&#x4F4D;&#x7F6E;&#xFF1A;src/core/observer/index.js</li>
+<li>&#x529F;&#x80FD;&#xFF1A;<ul>
+<li>&#x5224;&#x65AD; value &#x662F;&#x5426;&#x662F;&#x5BF9;&#x8C61;&#xFF0C;&#x5982;&#x679C;&#x4E0D;&#x662F;&#x5BF9;&#x8C61;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;</li>
+<li>&#x5224;&#x65AD; value &#x5BF9;&#x8C61;&#x662F;&#x5426;&#x6709;<code>__ob__</code>,&#x5982;&#x679C;&#x6709;&#x76F4;&#x63A5;&#x8FD4;&#x56DE;</li>
+<li>&#x5982;&#x679C;&#x6CA1;&#x6709;&#xFF0C;&#x521B;&#x5EFA; observer &#x5BF9;&#x8C61;</li>
+<li>&#x8FD4;&#x56DE; observer &#x5BF9;&#x8C61;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Observer<ul>
+<li>&#x4F4D;&#x7F6E;&#xFF1A;src/core/observer/index.js</li>
+<li>&#x529F;&#x80FD;&#xFF1A;<ul>
+<li>&#x7ED9; value &#x5BF9;&#x8C61;&#x5B9A;&#x4E49;&#x4E0D;&#x53EF;&#x679A;&#x4E3E;&#x7684;<code>__ob__</code>&#x5C5E;&#x6027;&#xFF0C;&#x8BB0;&#x5F55;&#x5F53;&#x524D;&#x7684; observer &#x5BF9;&#x8C61;</li>
+<li>&#x6570;&#x7EC4;&#x7684;&#x54CD;&#x5E94;&#x5F0F;&#x5904;&#x7406;</li>
+<li>&#x5BF9;&#x8C61;&#x7684;&#x54CD;&#x5E94;&#x5F0F;&#x5904;&#x7406;&#xFF0C;&#x8C03;&#x7528; walk &#x65B9;&#x6CD5;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>defineReactIve</p>
+<ul>
+<li>&#x4F4D;&#x7F6E;&#xFF1A;src/core/observer/index.js</li>
+<li>&#x529F;&#x80FD;&#xFF1A;<ul>
+<li>&#x4E3A;&#x6BCF;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;&#x521B;&#x5EFA; dep &#x5BF9;&#x8C61;</li>
+<li>&#x5982;&#x679C;&#x5F53;&#x524D;&#x5C5E;&#x6027;&#x7684;&#x503C;&#x662F;&#x5BF9;&#x8C61;&#xFF0C;&#x8C03;&#x7528; observe</li>
+<li>&#x5B9A;&#x4E49; getter<ul>
+<li>&#x6536;&#x96C6;&#x4F9D;&#x8D56;</li>
+<li>&#x8FD4;&#x56DE;&#x5C5E;&#x6027;&#x7684;&#x503C;</li>
+</ul>
+</li>
+<li>&#x5B9A;&#x4E49; setter<ul>
+<li>&#x4FDD;&#x5B58;&#x65B0;&#x503C;</li>
+<li>&#x5982;&#x679C;&#x65B0;&#x503C;&#x662F;&#x5BF9;&#x8C61;&#xFF0C;&#x8C03;&#x7528; observe</li>
+<li>&#x6D3E;&#x53D1;&#x66F4;&#x65B0;&#xFF08;&#x53D1;&#x9001;&#x901A;&#x77E5;&#xFF09;&#xFF0C;&#x8C03;&#x7528; dep.notify()</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>&#x6536;&#x96C6;&#x4F9D;&#x8D56;</p>
+<ul>
+<li>&#x5728; watcher &#x5BF9;&#x8C61;&#x7684; get &#x65B9;&#x6CD5;&#x4E2D;&#x8C03;&#x7528; pushTarget &#x8BB0;&#x5F55; Dep.target &#x5C5E;&#x6027;</li>
+<li>&#x8BBF;&#x95EE; data &#x4E2D;&#x7684;&#x6210;&#x5458;&#x7684;&#x65F6;&#x5019;&#x6536;&#x96C6;&#x4F9D;&#x8D56;&#xFF0C;defineReactive &#x7684; getter &#x4E2D;&#x6536;&#x96C6;&#x4F9D;&#x8D56;</li>
+<li>&#x628A;&#x5C5E;&#x6027;&#x5BF9;&#x5E94;&#x7684; watcher &#x5BF9;&#x8C61;&#x6DFB;&#x52A0;&#x5230; dep &#x7684; subs &#x6570;&#x7EC4;&#x4E2D;</li>
+<li>&#x7ED9; childOb &#x6536;&#x96C6;&#x4F9D;&#x8D56;&#xFF0C;&#x76EE;&#x7684;&#x662F;&#x5B50;&#x5BF9;&#x8C61;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x6210;&#x5458;&#x65F6;&#x53D1;&#x9001;&#x901A;&#x77E5;</li>
+</ul>
+</li>
+<li>Watcher<ul>
+<li>dep.notify()&#x5728;&#x8C03;&#x7528; watcher &#x5BF9;&#x8C61;&#x7684; update()&#x65B9;&#x6CD5;</li>
+<li>queueWatcher()&#x5224;&#x65AD; watcher &#x662F;&#x5426;&#x88AB;&#x5904;&#x7406;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x7684;&#x8BDD;&#x6DFB;&#x52A0;&#x5230; queue &#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x5E76;&#x8C03;&#x7528; flushScheduleQueue()</li>
+<li>flushScheduleQueue()<ul>
+<li>&#x89E6;&#x53D1; beforeUpdate &#x94A9;&#x5B50;&#x51FD;&#x6570;</li>
+<li>&#x8C03;&#x7528; watcher.run()&#xFF1A; run() --&gt; get() --&gt; getter() --&gt; updateComponent</li>
+<li>&#x6E05;&#x7A7A;&#x4E0A;&#x4E00;&#x6B21;&#x7684;&#x4F9D;&#x8D56;</li>
+<li>&#x89E6;&#x53D1; actived &#x7684;&#x94A9;&#x5B50;&#x51FD;&#x6570;</li>
+<li>&#x89E6;&#x53D1; updated &#x94A9;&#x5B50;&#x51FD;&#x6570;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="8-vue-&#x7ED9;&#x54CD;&#x5E94;&#x5F0F;&#x5BF9;&#x8C61;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x54CD;&#x5E94;&#x5F0F;&#x5C5E;&#x6027;--set-&#x65B9;&#x6CD5;">8. Vue &#x7ED9;&#x54CD;&#x5E94;&#x5F0F;&#x5BF9;&#x8C61;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x54CD;&#x5E94;&#x5F0F;&#x5C5E;&#x6027;--set &#x65B9;&#x6CD5;</h4>
+<ul>
+<li><p>Vue.set()&#x5B9A;&#x4E49;&#x4F4D;&#x7F6E;&#xFF1A;global-api/index.js</p>
+<pre><code class="lang-js"><span class="hljs-comment">// &#x9759;&#x6001;&#x65B9;&#x6CD5;&#xFF1A;set/delete/nextTick</span>
+Vue.set = set;
+Vue.delete = del;
+Vue.nextTick = nextTick;
+</code></pre>
+</li>
+<li><p>vm.$set()&#x5B9A;&#x4E49;&#x4F4D;&#x7F6E;&#xFF1A;instance/index.js</p>
+<pre><code class="lang-js"><span class="hljs-comment">// &#x6CE8;&#x518C;vm&#x7684;$data/$props/$set/$delete/$watch</span>
+stateMixin(Vue);
+
+<span class="hljs-comment">// instance/state.js</span>
+Vue.prototype.$set = set;
+</code></pre>
+</li>
+</ul>
+<p>&#x4F7F;&#x7528;&#xFF1A;<code>Vue.set(target, attrName, attrValue)</code>&#x6216;<code>vm.$set(target, attrName, attrValue)</code></p>
+<p>&#x4F8B;&#x5982;&#xFF1A;<code>Vue.set(vm.obj, &apos;name&apos;, &apos;zhangsan&apos;)</code></p>
+<p>&#x6E90;&#x7801;&#x4E2D; set &#x65B9;&#x6CD5;&#x7684;&#x5B9E;&#x73B0;(<strong>&#x5173;&#x952E;&#x70B9;&#xFF1A;&#x8C03;&#x7528;&#x4E86;<code>ob.dep.notify()</code></strong>)&#xFF1A;</p>
+<pre><code class="lang-js"><span class="hljs-comment">/**
+ * Set a property on an object. Adds the new property and
+ * triggers change notification if the property doesn&apos;t
+ * already exist.
+ */</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">set</span>(<span class="hljs-params">target: Array&lt;any&gt; | Object, key: any, val: any</span>): <span class="hljs-title">any</span> </span>{
+  <span class="hljs-keyword">if</span> (
+    process.env.NODE_ENV !== <span class="hljs-string">&quot;production&quot;</span> &amp;&amp;
+    (isUndef(target) || isPrimitive(target))
+  ) {
+    warn(
+      <span class="hljs-string">`Cannot set reactive property on undefined, null, or primitive value: <span class="hljs-subst">${(target: any)}</span>`</span>
+    );
+  }
+  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(target) &amp;&amp; isValidArrayIndex(key)) {
+    target.length = <span class="hljs-built_in">Math</span>.max(target.length, key);
+    target.splice(key, <span class="hljs-number">1</span>, val);
+    <span class="hljs-keyword">return</span> val;
+  }
+  <span class="hljs-keyword">if</span> (key <span class="hljs-keyword">in</span> target &amp;&amp; !(key <span class="hljs-keyword">in</span> <span class="hljs-built_in">Object</span>.prototype)) {
+    target[key] = val;
+    <span class="hljs-keyword">return</span> val;
+  }
+  <span class="hljs-keyword">const</span> ob = (target: any).__ob__;
+  <span class="hljs-keyword">if</span> (target._isVue || (ob &amp;&amp; ob.vmCount)) {
+    process.env.NODE_ENV !== <span class="hljs-string">&quot;production&quot;</span> &amp;&amp;
+      warn(
+        <span class="hljs-string">&quot;Avoid adding reactive properties to a Vue instance or its root $data &quot;</span> +
+          <span class="hljs-string">&quot;at runtime - declare it upfront in the data option.&quot;</span>
+      );
+    <span class="hljs-keyword">return</span> val;
+  }
+  <span class="hljs-keyword">if</span> (!ob) {
+    target[key] = val;
+    <span class="hljs-keyword">return</span> val;
+  }
+  defineReactive(ob.value, key, val);
+  ob.dep.notify();
+  <span class="hljs-keyword">return</span> val;
+}
+</code></pre>
+<h4 id="9-&#x5220;&#x9664;&#x4E00;&#x4E2A;&#x54CD;&#x5E94;&#x5F0F;&#x5C5E;&#x6027;--delete-&#x65B9;&#x6CD5;">9. &#x5220;&#x9664;&#x4E00;&#x4E2A;&#x54CD;&#x5E94;&#x5F0F;&#x5C5E;&#x6027;--delete &#x65B9;&#x6CD5;</h4>
+<p><code>Vue.delete()</code>&#x6216;<code>vm.$delete()</code>&#x5220;&#x9664;&#x5BF9;&#x8C61;&#x7684;&#x5C5E;&#x6027;&#x3002;&#x5982;&#x679C;&#x5BF9;&#x8C61;&#x65F6;&#x54CD;&#x5E94;&#x5F0F;&#x7684;&#xFF0C;&#x786E;&#x4FDD;&#x5220;&#x9664;&#x80FD;&#x89E6;&#x53D1;&#x66F4;&#x65B0;&#x89C6;&#x56FE;&#x3002;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x4E3B;&#x8981;&#x7528;&#x4E8E;&#x907F;&#x514D; Vue &#x4E0D;&#x80FD;&#x68C0;&#x6D4B;&#x5230;&#x5C5E;&#x6027;&#x88AB;&#x5220;&#x9664;&#x7684;&#x9650;&#x5236;&#x3002;&#xFF08;&#x5176;&#x5B9E;&#x5F00;&#x53D1;&#x8005;&#x5E94;&#x8BE5;&#x4F1A;&#x5F88;&#x5C11;&#x4F7F;&#x7528;&#x5230;&#x5B83;&#xFF09;</p>
+<blockquote>
+<p>&#x6CE8;&#x610F;&#xFF1A;&#x76EE;&#x6807;&#x5BF9;&#x8C61;&#x4E0D;&#x80FD;&#x662F;&#x4E00;&#x4E2A; Vue &#x5B9E;&#x4F8B;&#x6216; Vue &#x5B9E;&#x4F8B;&#x7684;&#x6839;&#x6570;&#x636E;&#x5BF9;&#x8C61;&#x3002;</p>
+</blockquote>
+<p>&#x793A;&#x4F8B;&#xFF1A;<code>vm.$delete(vm.obj, &apos;msg&apos;)</code> &#x6216;<code>Vue.delete(vm.obj, &apos;msg&apos;)</code></p>
+<p>&#x5B9A;&#x4E49;&#x4F4D;&#x7F6E;&#xFF1A;&#x540C;&#x4E0A;&#x7684; set&#x3002;</p>
+<p>&#x6E90;&#x7801;&#x4E2D; delete &#x65B9;&#x6CD5;&#x7684;&#x5B9E;&#x73B0;(<strong>&#x5173;&#x952E;&#x70B9;&#xFF1A;&#x8C03;&#x7528;&#x4E86;<code>ob.dep.notify()</code></strong>)&#xFF1A;</p>
+<pre><code class="lang-js"><span class="hljs-comment">/**
+ * Delete a property and trigger change if necessary.
+ */</span>
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">del</span>(<span class="hljs-params">target: Array&lt;any&gt; | Object, key: any</span>) </span>{
+  <span class="hljs-keyword">if</span> (
+    process.env.NODE_ENV !== <span class="hljs-string">&quot;production&quot;</span> &amp;&amp;
+    (isUndef(target) || isPrimitive(target))
+  ) {
+    warn(
+      <span class="hljs-string">`Cannot delete reactive property on undefined, null, or primitive value: <span class="hljs-subst">${(target: any)}</span>`</span>
+    );
+  }
+  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(target) &amp;&amp; isValidArrayIndex(key)) {
+    target.splice(key, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span>;
+  }
+  <span class="hljs-keyword">const</span> ob = (target: any).__ob__;
+  <span class="hljs-keyword">if</span> (target._isVue || (ob &amp;&amp; ob.vmCount)) {
+    process.env.NODE_ENV !== <span class="hljs-string">&quot;production&quot;</span> &amp;&amp;
+      warn(
+        <span class="hljs-string">&quot;Avoid deleting properties on a Vue instance or its root $data &quot;</span> +
+          <span class="hljs-string">&quot;- just set it to null.&quot;</span>
+      );
+    <span class="hljs-keyword">return</span>;
+  }
+  <span class="hljs-keyword">if</span> (!hasOwn(target, key)) {
+    <span class="hljs-keyword">return</span>;
+  }
+  <span class="hljs-keyword">delete</span> target[key];
+  <span class="hljs-keyword">if</span> (!ob) {
+    <span class="hljs-keyword">return</span>;
+  }
+  ob.dep.notify();
+}
+</code></pre>
+<h4 id="10-&#x5F02;&#x6B65;&#x66F4;&#x65B0;&#x961F;&#x5217;&#xFF0C;nexttick">10. &#x5F02;&#x6B65;&#x66F4;&#x65B0;&#x961F;&#x5217;&#xFF0C;$nextTick</h4>
+<ul>
+<li>Vue &#x66F4;&#x65B0; DOM &#x662F;&#x5F02;&#x6B65;&#x6267;&#x884C;&#x7684;&#xFF0C;&#x6279;&#x91CF;&#x7684;<ul>
+<li>&#x5728;&#x4E0B;&#x6B21; DOM &#x66F4;&#x65B0;&#x5FAA;&#x73AF;&#x7ED3;&#x675F;&#x4E4B;&#x540E;&#x6267;&#x884C;&#x5EF6;&#x8FDF;&#x56DE;&#x8C03;&#x3002;&#x5728;&#x4FEE;&#x6539;&#x6570;&#x636E;&#x4E4B;&#x540E;&#x7ACB;&#x5373;&#x4F7F;&#x7528;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#xFF0C;&#x83B7;&#x53D6;&#x66F4;&#x65B0;&#x540E;&#x7684; DOM&#x3002;</li>
+</ul>
+</li>
+<li><code>vm.$nextTick(function () {/*&#x64CD;&#x4F5C;DOM*/})</code> / <code>Vue.nextTick(function () {})</code></li>
+</ul>
+<p>&#x6E90;&#x7801;&#x4E2D; nextTick &#x65B9;&#x6CD5;&#x7684;&#x5B9E;&#x73B0;(<strong>&#x5173;&#x952E;&#x70B9;&#xFF1A;&#x8C03;&#x7528;<code>timerFunc()</code></strong>)&#xFF1A;</p>
+<pre><code class="lang-js"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">nextTick</span>(<span class="hljs-params">cb?: Function, ctx?: Object</span>) </span>{
+  <span class="hljs-keyword">let</span> _resolve;
+  callbacks.push(() =&gt; {
+    <span class="hljs-keyword">if</span> (cb) {
+      <span class="hljs-keyword">try</span> {
+        cb.call(ctx);
+      } <span class="hljs-keyword">catch</span> (e) {
+        handleError(e, ctx, <span class="hljs-string">&quot;nextTick&quot;</span>);
+      }
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (_resolve) {
+      _resolve(ctx);
+    }
+  });
+  <span class="hljs-keyword">if</span> (!pending) {
+    pending = <span class="hljs-literal">true</span>;
+    timerFunc();
+  }
+  <span class="hljs-comment">// $flow-disable-line</span>
+  <span class="hljs-keyword">if</span> (!cb &amp;&amp; <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">Promise</span> !== <span class="hljs-string">&quot;undefined&quot;</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve) =&gt; {
+      _resolve = resolve;
+    });
+  }
+}
+</code></pre>
+<p>mounted &#x4E2D;&#x7684;&#x66F4;&#x65B0;&#x6570;&#x636E;&#x662F;&#x4E00;&#x4E2A;&#x5F02;&#x6B65;&#x7684;&#x8FC7;&#x7A0B;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; nextTick &#x83B7;&#x53D6;&#x6700;&#x65B0;&#x503C;&#xFF0C;&#x5728; nextTick &#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x4E2D;&#xFF0C;&#x89C6;&#x56FE;&#x5DF2;&#x7ECF;&#x66F4;&#x65B0;&#x5B8C;&#x6BD5;&#xFF0C;&#x6240;&#x4EE5;&#x53EF;&#x4EE5;&#x83B7;&#x53D6;&#x89C6;&#x56FE;&#x4E0A;&#x7684;&#x6700;&#x65B0;&#x6570;&#x636E;&#x3002;</p>
+<p>&#x7528;&#x6237;&#x4F20;&#x5165;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x4F1A;&#x5B58;&#x5230; callbacks &#x6570;&#x7EC4;&#x4E2D;&#xFF0C;&#x7136;&#x540E;&#x5728; timerFunc &#x51FD;&#x6570;&#x4E2D;&#x4EE5;&#x5FAE;&#x4EFB;&#x52A1;&#x7684;&#x5F62;&#x5F0F;&#x6267;&#x884C; callbacks&#x3002;&#x5FAE;&#x4EFB;&#x52A1;&#x662F;&#x5728;&#x672C;&#x6B21;&#x4EFB;&#x52A1;&#x5B8C;&#x6210;&#x4E4B;&#x540E;&#xFF0C;&#x624D;&#x4F1A;&#x53BB;&#x6267;&#x884C;&#x3002;nextTick &#x662F;&#x83B7;&#x53D6; DOM &#x4E0A;&#x7684;&#x6700;&#x65B0;&#x6570;&#x636E;&#xFF0C;&#x5F53;&#x5FAE;&#x4EFB;&#x52A1;&#x6267;&#x884C;&#x7684;&#x65F6;&#x5019;&#xFF0C;DOM &#x5143;&#x7D20;&#x8FD8;&#x672A;&#x6E32;&#x67D3;&#x5230;&#x6D4F;&#x89C8;&#x5668;&#x4E0A;&#xFF0C;&#x4F46;&#x5176;&#x5B9E;&#x5728; nextTick &#x4E2D;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x6267;&#x884C;&#x4E4B;&#x524D;&#xFF0C;&#x6570;&#x636E;&#x5DF2;&#x7ECF;&#x88AB;&#x6539;&#x53D8;&#x4E86;&#xFF0C;&#x5F53;&#x6570;&#x636E;&#x6539;&#x53D8;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x4F1A;&#x901A;&#x77E5; watcher &#x6E32;&#x67D3;&#x89C6;&#x56FE;&#xFF0C;&#x4F46;&#x5728; watcher &#x91CC;&#x662F;&#x5148;&#x66F4;&#x65B0; DOM &#x6811;&#xFF0C;&#x800C;&#x4EC0;&#x4E48;&#x65F6;&#x5019;&#x5C06; DOM &#x6570;&#x636E;&#x66F4;&#x65B0;&#x5230;&#x6D4F;&#x89C8;&#x5668;&#x4E0A;&#xFF0C;&#x662F;&#x8FD9;&#x6B21;&#x4E8B;&#x4EF6;&#x5FAA;&#x73AF;&#x7ED3;&#x675F;&#x4E4B;&#x540E;&#xFF0C;&#x624D;&#x4F1A;&#x6267;&#x884C; DOM &#x7684;&#x6E32;&#x67D3;&#x3002;nextTick &#x4E2D;&#x83B7;&#x53D6; DOM &#x6570;&#x636E;&#x662F;&#x4ECE; DOM &#x6811;&#x4E0A;&#x83B7;&#x53D6;&#x6570;&#x636E;&#x7684;&#xFF0C;&#x6B64;&#x65F6; DOM &#x8FD8;&#x672A;&#x6E32;&#x67D3;&#x5230;&#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#x3002;nextTick &#x4E2D;&#x4F18;&#x5148;&#x4F7F;&#x7528; Promise &#x6267;&#x884C;&#x5FAE;&#x4EFB;&#x52A1;&#x3002;&#x5728;&#x975E; IE &#x6D4F;&#x89C8;&#x5668;&#x4E2D;&#xFF0C;&#x4F7F;&#x7528;&#x4E86; MutationObserver &#x6267;&#x884C;&#x5FAE;&#x4EFB;&#x52A1;&#x3002;&#x5982;&#x679C; Promise &#x548C; MutationObserver &#x90FD;&#x4E0D;&#x652F;&#x6301;&#xFF0C;&#x5219;&#x4F7F;&#x7528; setImmediate&#xFF0C;setImmediate &#x53EA;&#x6709; IE &#x6D4F;&#x89C8;&#x5668;&#x548C; Nodejs &#x652F;&#x6301;&#x3002;&#x6709;&#x7684;&#x6D4F;&#x89C8;&#x5668;&#x4E0D;&#x652F;&#x6301;&#x5FAE;&#x4EFB;&#x52A1;&#xFF0C;&#x5219;&#x964D;&#x7EA7;&#x4F7F;&#x7528; setTimeout</p>
+<blockquote>
+<p>&#x6CE8;&#xFF1A;setImmediate &#x7684;&#x6027;&#x80FD;&#x6BD4; setTimeout &#x597D;&#xFF0C;&#x5728;&#x5B9A;&#x65F6;&#x65F6;&#x95F4;&#x4E3A; 0 &#x7684;&#x65F6;&#x5019;&#xFF0C;setTimeout &#x4F1A;&#x5EF6;&#x8FDF; 4ms &#x624D;&#x4F1A;&#x6267;&#x884C;&#xFF0C;&#x800C; setImmediate &#x4F1A;&#x7ACB;&#x5373;&#x6267;&#x884C;&#x3002;</p>
+</blockquote>
+<h2 id="vue-&#x6E90;&#x7801;--&#x865A;&#x62DF;-dom">Vue &#x6E90;&#x7801;--&#x865A;&#x62DF; DOM</h2>
+<h3 id="&#x4E00;&#x3001;&#x865A;&#x62DF;-dom-&#x56DE;&#x987E;">&#x4E00;&#x3001;&#x865A;&#x62DF; DOM &#x56DE;&#x987E;</h3>
+<h4 id="1-&#x4EC0;&#x4E48;&#x662F;&#x865A;&#x62DF;-dom">1. &#x4EC0;&#x4E48;&#x662F;&#x865A;&#x62DF; DOM</h4>
+<ul>
+<li>&#x865A;&#x62DF; DOM &#x5C31;&#x662F;&#x4F7F;&#x7528; JavaScript &#x5BF9;&#x8C61;&#x63CF;&#x8FF0;&#x771F;&#x5B9E; DOM</li>
+<li>Vue &#x4E2D;&#x7684;&#x865A;&#x62DF; DOM &#x501F;&#x9274; Snabbdom&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x4E86; Vue &#x7684;&#x7279;&#x6027;&#xFF0C;&#x4F8B;&#x5982;&#x6307;&#x4EE4;&#x548C;&#x7EC4;&#x4EF6;&#x673A;&#x5236;</li>
+</ul>
+<h4 id="2-&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x4F7F;&#x7528;&#x865A;&#x62DF;-dom">2. &#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x4F7F;&#x7528;&#x865A;&#x62DF; DOM</h4>
+<ul>
+<li>&#x907F;&#x514D;&#x76F4;&#x63A5;&#x64CD;&#x4F5C; DOM&#xFF0C;&#x63D0;&#x9AD8;&#x5F00;&#x53D1;&#x6548;&#x7387;</li>
+<li>&#x4F5C;&#x4E3A;&#x4E00;&#x4E2A;&#x4E2D;&#x95F4;&#x5C42;&#x53EF;&#x4EE5;&#x8DE8;&#x5E73;&#x53F0;</li>
+<li>&#x865A;&#x62DF; DOM &#x4E0D;&#x4E00;&#x5B9A;&#x53EF;&#x4EE5;&#x63D0;&#x9AD8;&#x6027;&#x80FD;<ul>
+<li>&#x9996;&#x6B21;&#x6E32;&#x67D3;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x589E;&#x52A0;&#x5F00;&#x9500;</li>
+<li>&#x590D;&#x6742;&#x89C6;&#x56FE;&#x60C5;&#x51B5;&#x4E0B;&#x63D0;&#x5347;&#x6E32;&#x67D3;&#x6027;&#x80FD;</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-h-&#x51FD;&#x6570;">3. h &#x51FD;&#x6570;</h4>
+<ul>
+<li>vm.$createElement(tag, data, children, normalizeChildren)<ul>
+<li>tag&#xFF1A;&#x6807;&#x7B7E;&#x540D;&#x79F0;&#x6216;&#x8005;&#x7EC4;&#x4EF6;&#x5BF9;&#x8C61;</li>
+<li>data&#xFF1A;&#x63CF;&#x8FF0; tag&#xFF0C;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E; DOM &#x7684;&#x5C5E;&#x6027;&#x6216;&#x8005;&#x6807;&#x7B7E;&#x7684;&#x5C5E;&#x6027;</li>
+<li>children&#xFF1A;tag &#x4E2D;&#x7684;&#x6587;&#x672C;&#x5185;&#x5BB9;&#x6216;&#x8005;&#x5B50;&#x8282;&#x70B9;</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-h-&#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;--vnode">4. h &#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;--VNode</h4>
+<ul>
+<li>VNode &#x7684;&#x6838;&#x5FC3;&#x5C5E;&#x6027;<ul>
+<li>tag</li>
+<li>data</li>
+<li>children</li>
+<li>text</li>
+<li>elm</li>
+<li>key</li>
+</ul>
+</li>
+</ul>
+<h3 id="&#x4E8C;&#x3001;&#x865A;&#x62DF;-dom-&#x6574;&#x4F53;&#x5206;&#x6790;">&#x4E8C;&#x3001;&#x865A;&#x62DF; DOM &#x6574;&#x4F53;&#x5206;&#x6790;</h3>
+<p><img src="../images/03-02/04.png" alt="../images/03-02/04.png"></p>
+<h2 id="vue-&#x6A21;&#x677F;&#x7F16;&#x8BD1;">Vue &#x6A21;&#x677F;&#x7F16;&#x8BD1;</h2>
+<h3 id="&#x4E00;&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x4ECB;&#x7ECD;">&#x4E00;&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x4ECB;&#x7ECD;</h3>
+<h4 id="1-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7B80;&#x4ECB;">1. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7B80;&#x4ECB;</h4>
+<p>&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x4E3B;&#x8981;&#x76EE;&#x7684;&#x662F;&#x5C06;&#x6A21;&#x677F;&#xFF08;template&#xFF09;&#x8F6C;&#x6362;&#x4E3A;&#x6E32;&#x67D3;&#x51FD;&#x6570;&#xFF08;render&#xFF09;</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;handler&quot;</span>&gt;</span>
+    title
+  <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+    some content
+  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p>&#x6E32;&#x67D3;&#x51FD;&#x6570;:</p>
+<pre><code class="lang-js">render (h) {
+  <span class="hljs-keyword">return</span> h(<span class="hljs-string">&apos;div&apos;</span>, [
+    h(<span class="hljs-string">&apos;h1&apos;</span>, { on: { click: <span class="hljs-keyword">this</span>.handler } }, <span class="hljs-string">&apos;title&apos;</span>),
+    h(<span class="hljs-string">&apos;p&apos;</span>, <span class="hljs-string">&apos;some content&apos;</span>)
+  ])
+}
+</code></pre>
+<h4 id="2-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x4F5C;&#x7528;">2. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x4F5C;&#x7528;</h4>
+<ul>
+<li>Vue2.0 &#x4F7F;&#x7528; VNode &#x63CF;&#x8FF0;&#x89C6;&#x56FE;&#x4EE5;&#x53CA;&#x5404;&#x79CD;&#x4EA4;&#x4E92;&#xFF0C;&#x7528;&#x6237;&#x81EA;&#x5DF1;&#x7F16;&#x5199; VNode &#x6BD4;&#x8F83;&#x590D;&#x6742;</li>
+<li>&#x7528;&#x6237;&#x53EA;&#x9700;&#x8981;&#x7F16;&#x5199;&#x7C7B;&#x4F3C; HTML &#x7684;&#x4EE3;&#x7801; - Vue.js &#x6A21;&#x677F;&#xFF0C;&#x901A;&#x8FC7;&#x7F16;&#x8BD1;&#x5668;&#x5C06;&#x6A21;&#x677F;&#x8F6C;&#x6362;&#x4E3A;&#x8FD4;&#x56DE; VNode &#x7684; render &#x51FD;&#x6570;</li>
+<li>.vue &#x6587;&#x4EF6;&#x4F1A;&#x88AB; webpack &#x5728;&#x6784;&#x5EFA;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x8F6C;&#x6362;&#x6210; render &#x51FD;&#x6570;</li>
+</ul>
+<h3 id="&#x4E8C;&#x3001;&#x4F53;&#x9A8C;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x7ED3;&#x679C;">&#x4E8C;&#x3001;&#x4F53;&#x9A8C;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x7ED3;&#x679C;</h3>
+<h4 id="1-&#x7F16;&#x8BD1;&#x751F;&#x6210;&#x7684;&#x51FD;&#x6570;&#x7684;&#x4F4D;&#x7F6E;">1. &#x7F16;&#x8BD1;&#x751F;&#x6210;&#x7684;&#x51FD;&#x6570;&#x7684;&#x4F4D;&#x7F6E;</h4>
+<ul>
+<li><code>_c()</code><ul>
+<li><code>src/core/instance/render.js</code></li>
+</ul>
+</li>
+<li><code>_m()/_v()/_s()</code><ul>
+<li><code>src/core/instance/render-helpers/index.js</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="2-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x7ED3;&#x679C;">2. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x7ED3;&#x679C;</h4>
+<pre><code class="lang-js">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">anonymous</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">with</span> (<span class="hljs-keyword">this</span>) {
+    <span class="hljs-keyword">return</span> _c(
+      <span class="hljs-string">&quot;div&quot;</span>,
+      { attrs: { id: <span class="hljs-string">&quot;app&quot;</span> } },
+      [
+        _m(<span class="hljs-number">0</span>), <span class="hljs-comment">// &#x9759;&#x6001;&#x6807;&#x7B7E;</span>
+        _v(<span class="hljs-string">&quot; &quot;</span>), <span class="hljs-comment">// &#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x7684;&#x7A7A;&#x767D;&#x5B57;&#x7B26;</span>
+        _c(<span class="hljs-string">&quot;p&quot;</span>, [_v(_s(msg))]), <span class="hljs-comment">// _s&#x662F;&#x8F6C;&#x6362;&#x6210;&#x5B57;&#x7B26;&#x4E32;</span>
+        _v(<span class="hljs-string">&quot; &quot;</span>),
+        _c(<span class="hljs-string">&quot;comp&quot;</span>, { on: { myclick: handler } }), <span class="hljs-comment">// &#x81EA;&#x5B9A;&#x4E49;&#x6A21;&#x677F;</span>
+      ],
+      <span class="hljs-number">1</span> <span class="hljs-comment">// 1&#x8868;&#x793A;&#x5982;&#x679C;&#x662F;&#x4E8C;&#x7EF4;&#x6570;&#x7EC4;&#xFF0C;&#x4F1A;&#x8FDB;&#x884C;&#x62CD;&#x5E73;</span>
+    );
+  }
+});
+</code></pre>
+<h4 id="3-vue-template-explorer">3. Vue Template Explorer</h4>
+<p>&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x7F51;&#x9875;&#x5DE5;&#x5177;&#xFF0C;&#x662F;&#x5C06; HTML &#x6A21;&#x677F;&#x8F6C;&#x6362;&#x4E3A; render &#x51FD;&#x6570;&#xFF0C;</p>
+<p>Vue2 &#x7F51;&#x5740;&#x662F;&#xFF1A;<a href="https://template-explorer.vuejs.org/" target="_blank">https://template-explorer.vuejs.org/</a></p>
+<p><img src="../images/03-02/05.png" alt="../images/03-02/05.png"></p>
+<p>Vu3 &#x7F51;&#x5740;&#x662F;&#xFF1A;<a href="https://vue-next-template-explorer.netlify.app/" target="_blank">https://vue-next-template-explorer.netlify.app/</a></p>
+<p><img src="../images/03-02/06.png" alt="../images/03-02/06.png"></p>
+<p>&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x770B;&#x5230; Vue &#x5BF9; render &#x51FD;&#x6570;&#x505A;&#x4E86;&#x4F18;&#x5316;&#xFF0C;&#x6B64;&#x5916; Vue2 &#x4E2D;&#x7684;&#x6A21;&#x677F;&#x4E2D;&#x5C3D;&#x91CF;&#x4E0D;&#x8981;&#x51FA;&#x73B0;&#x591A;&#x4F59;&#x7684;&#x7A7A;&#x767D;&#xFF0C;&#x56E0;&#x4E3A;&#x90FD;&#x4F1A;&#x88AB;&#x8F6C;&#x6362;&#x5230; render &#x51FD;&#x6570;&#x4E2D;&#xFF0C;Vue3 &#x7684;&#x6A21;&#x677F;&#x4E2D;&#x7684;&#x7A7A;&#x767D;&#x5219;&#x4E0D;&#x5F71;&#x54CD; render &#x51FD;&#x6570;</p>
+<h3 id="&#x4E09;&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x5165;&#x53E3;">&#x4E09;&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x5165;&#x53E3;</h3>
+<p><img src="../images/03-02/07.jpeg" alt="../images/03-02/07.jpeg"></p>
+<h3 id="&#x56DB;&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x8FC7;&#x7A0B;">&#x56DB;&#x3001;&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x8FC7;&#x7A0B;</h3>
+<h4 id="1-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x5165;&#x53E3;">1. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x5165;&#x53E3;</h4>
+<p>&#x4F4D;&#x7F6E;&#xFF1A;src/compiler/create-compiler.js</p>
+<p>createCompilerCreator &#x51FD;&#x6570;&#x8FD4;&#x56DE;&#x4E86; compile &#x5BF9;&#x8C61;&#x548C; compileToFunctions &#x51FD;&#x6570;&#x3002;</p>
+<p>&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x7684;&#x5165;&#x53E3;&#x51FD;&#x6570; compileToFunctions() &#x4E2D;&#x7684; generate &#x51FD;&#x6570;&#x7684;&#x4F5C;&#x7528;&#x662F;&#x628A;&#x4F18;&#x5316;&#x540E;&#x7684; AST &#x8F6C;&#x6362;&#x6210;&#x4EE3;&#x7801;</p>
+<p>&#x6A21;&#x677F;&#x548C;&#x63D2;&#x503C;&#x8868;&#x8FBE;&#x5F0F;&#x5728;&#x7F16;&#x8BD1;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x90FD;&#x4F1A;&#x88AB;&#x8F6C;&#x6362;&#x6210;&#x5BF9;&#x5E94;&#x7684;&#x4EE3;&#x7801;&#x5F62;&#x5F0F;&#xFF0C;&#x4E0D;&#x4F1A;&#x51FA;&#x73B0;&#x5728; render &#x51FD;&#x6570;&#x4E2D;</p>
+<h4 id="2-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;---basecompile---ast">2. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B; - baseCompile - AST</h4>
+<p>&#x4F4D;&#x7F6E;&#xFF1A;src/compiler/index.js</p>
+<p>&#x5728; createCompilerCreator &#x51FD;&#x6570;&#x4E2D;&#xFF0C;&#x9996;&#x5148;&#x7528; parse &#x51FD;&#x6570;&#x628A;&#x6A21;&#x677F;&#x8F6C;&#x6362;&#x6210; ast &#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;&#xFF0C;&#x7136;&#x540E;&#x4F7F;&#x7528; optimize &#x51FD;&#x6570;&#x4F18;&#x5316;&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;&#xFF0C;&#x518D;&#x7528; generate &#x51FD;&#x6570;&#x628A;&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x4E66;&#x751F;&#x6210;&#x5B57;&#x7B26;&#x4E32;&#x5F62;&#x5F0F;&#x7684; js &#x4EE3;&#x7801;</p>
+<pre><code class="lang-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> createCompiler = createCompilerCreator(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">baseCompile</span>(<span class="hljs-params">
+  template: string,
+  options: CompilerOptions
+</span>): <span class="hljs-title">CompiledResult</span> </span>{
+  <span class="hljs-comment">// &#x628A;&#x6A21;&#x677F;&#x8F6C;&#x6362;&#x6210;ast&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;</span>
+  <span class="hljs-comment">// &#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;&#xFF0C;&#x7528;&#x6765;&#x4EE5;&#x6811;&#x5F62;&#x7684;&#x65B9;&#x5F0F;&#x63CF;&#x8FF0;&#x4EE3;&#x7801;&#x7ED3;&#x6784;</span>
+  <span class="hljs-keyword">const</span> ast = parse(template.trim(), options);
+  <span class="hljs-keyword">if</span> (options.optimize !== <span class="hljs-literal">false</span>) {
+    <span class="hljs-comment">// &#x4F18;&#x5316;&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;</span>
+    optimize(ast, options);
+  }
+  <span class="hljs-comment">// &#x628A;&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x4E66;&#x751F;&#x6210;&#x5B57;&#x7B26;&#x4E32;&#x5F62;&#x5F0F;&#x7684;js&#x4EE3;&#x7801;</span>
+  <span class="hljs-keyword">const</span> code = generate(ast, options);
+  <span class="hljs-keyword">return</span> {
+    ast,
+    <span class="hljs-comment">// &#x6E32;&#x67D3;&#x51FD;&#x6570;</span>
+    render: code.render,
+    <span class="hljs-comment">// &#x9759;&#x6001;&#x6E32;&#x67D3;&#x51FD;&#x6570;</span>
+    staticRenderFns: code.staticRenderFns,
+  };
+});
+</code></pre>
+<h4 id="3-&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x4F7F;&#x7528;&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;">3. &#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x4F7F;&#x7528;&#x62BD;&#x8C61;&#x8BED;&#x6CD5;&#x6811;</h4>
+<ul>
+<li>&#x6A21;&#x677F;&#x5B57;&#x7B26;&#x4E32;&#x8F6C;&#x6362;&#x6210; AST &#x540E;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; AST &#x5BF9;&#x6A21;&#x677F;&#x505A;&#x4F18;&#x5316;&#x5904;&#x7406;</li>
+<li>&#x6807;&#x8BB0;&#x6A21;&#x677F;&#x4E2D;&#x7684;&#x9759;&#x6001;&#x5185;&#x5BB9;&#xFF0C;&#x5728; patch &#x7684;&#x65F6;&#x5019;&#x76F4;&#x63A5;&#x6389;&#x8FC7;&#x9759;&#x6001;&#x5185;&#x5BB9;</li>
+<li>&#x5728; patch &#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x9759;&#x6001;&#x5185;&#x5BB9;&#x4E0D;&#x9700;&#x8981;&#x5BF9;&#x6BD4;&#x548C;&#x91CD;&#x65B0;&#x6E32;&#x67D3;</li>
+</ul>
+<h4 id="4-ast-&#x5728;&#x7EBF;&#x751F;&#x6210;&#x7F51;&#x7AD9;">4. AST &#x5728;&#x7EBF;&#x751F;&#x6210;&#x7F51;&#x7AD9;</h4>
+<p>AST &#x5728;&#x7EBF;&#x751F;&#x6210;&#x7F51;&#x5740;&#xFF1A;<a href="https://astexplorer.net/" target="_blank">https://astexplorer.net/</a></p>
+<p><img src="../images/03-02/08.png" alt="image-20200719100232801"></p>
+<h4 id="5-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;---basecompile---optimize">5. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B; - baseCompile - optimize</h4>
+<p>&#x4F4D;&#x7F6E;&#xFF1A;src/compiler/optimizer.js</p>
+<p>&#x4F18;&#x5316;&#x5904;&#x7406;&#xFF0C;&#x8DF3;&#x8FC7;&#x9759;&#x6001;&#x5B50;&#x6811;&#x3002;staticRoot &#x662F;&#x9759;&#x6001;&#x6839;&#x8282;&#x70B9;&#x3002;&#x6307;&#x8282;&#x70B9;&#x4E2D;&#x53EA;&#x5305;&#x542B;&#x7EAF;&#x6587;&#x672C;&#x7684;&#x8282;&#x70B9;&#xFF0C;&#x662F;&#x9759;&#x6001;&#x8282;&#x70B9;&#xFF0C;&#x4F46;&#x4E0D;&#x662F;&#x9759;&#x6001;&#x6839;&#x8282;&#x70B9;&#xFF0C;&#x56E0;&#x4E3A;&#x6B64;&#x65F6;&#x4F18;&#x5316;&#x7684;&#x6210;&#x672C;&#x5927;&#x4E8E;&#x6536;&#x76CA;&#xFF0C;Vue &#x8BA4;&#x4E3A;&#x8FD9;&#x79CD;&#x4F18;&#x5316;&#x4F1A;&#x5E26;&#x6765;&#x8D1F;&#x9762;&#x7684;&#x5F71;&#x54CD;</p>
+<p>&#x9759;&#x6001;&#x6839;&#x8282;&#x70B9;&#x4E0D;&#x4F1A;&#x88AB;&#x91CD;&#x65B0;&#x6E32;&#x67D3;&#xFF0C;patch &#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x4F1A;&#x8DF3;&#x8FC7;&#x9759;&#x6001;&#x6839;&#x8282;&#x70B9;&#x3002;</p>
+<h4 id="6-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;---basecompile---generate">6. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B; - baseCompile - generate</h4>
+<p>generate() &#x51FD;&#x6570;&#x8FD4;&#x56DE;&#x7684;&#x662F;&#x5B57;&#x7B26;&#x4E32;&#x5F62;&#x5F0F;&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x8FD8;&#x9700;&#x8981; toFunctions() &#x8F6C;&#x6362;&#x6210;&#x51FD;&#x6570;&#x7684;&#x5F62;&#x5F0F;</p>
+<h4 id="7-&#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B;---&#x603B;&#x7ED3;">7. &#x6A21;&#x677F;&#x7F16;&#x8BD1;&#x8FC7;&#x7A0B; - &#x603B;&#x7ED3;</h4>
+<p><img src="../images/03-02/09.jpeg" alt="../images/09.jpeg"></p>
+<h3 id="&#x4E94;&#x3001;&#x7EC4;&#x4EF6;&#x5316;&#x56DE;&#x987E;">&#x4E94;&#x3001;&#x7EC4;&#x4EF6;&#x5316;&#x56DE;&#x987E;</h3>
+<ul>
+<li>&#x4E00;&#x4E2A; Vue &#x7EC4;&#x4EF6;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x7528;&#x4E8E;&#x9884;&#x5B9A;&#x4E49;&#x9009;&#x9879;&#x7684;&#x4E00;&#x4E2A; Vue &#x5B9E;&#x4F8B;</li>
+<li>&#x4E00;&#x4E2A;&#x7EC4;&#x4EF6;&#x53EF;&#x4EE5;&#x7EC4;&#x6210;&#x9875;&#x9762;&#x4E0A;&#x7684;&#x4E00;&#x4E2A;&#x529F;&#x80FD;&#x5B8C;&#x5907;&#x7684;&#x533A;&#x57DF;&#xFF0C;&#x7EC4;&#x4EF6;&#x53EF;&#x4EE5;&#x5305;&#x542B;&#x811A;&#x672C;&#x3001;&#x6837;&#x5F0F;&#x3001;&#x6A21;&#x677F;</li>
+</ul>
+<h3 id="&#x516D;&#x3001;&#x7EC4;&#x4EF6;&#x6CE8;&#x518C;">&#x516D;&#x3001;&#x7EC4;&#x4EF6;&#x6CE8;&#x518C;</h3>
+<h4 id="1-&#x7EC4;&#x4EF6;&#x6CE8;&#x518C;&#x65B9;&#x5F0F;">1. &#x7EC4;&#x4EF6;&#x6CE8;&#x518C;&#x65B9;&#x5F0F;</h4>
+<ul>
+<li>&#x5168;&#x5C40;&#x7EC4;&#x4EF6;</li>
+<li>&#x5C40;&#x90E8;&#x7EC4;&#x4EF6;</li>
+</ul>
+<h4 id="2-vueextend">2. Vue.extend</h4>
+<p>&#x6839;&#x636E;&#x4F20;&#x5165;&#x7684;&#x9009;&#x9879;&#x521B;&#x5EFA;&#x7EC4;&#x4EF6;&#x7684;&#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x7EC4;&#x4EF6;&#x7684;&#x6784;&#x9020;&#x51FD;&#x6570;&#x7EE7;&#x627F;&#x81EA; Vue &#x7684;&#x6784;&#x9020;&#x51FD;&#x6570;&#x3002;</p>
+<h3 id="&#x4E03;&#x3001;&#x7EC4;&#x4EF6;&#x7684;&#x521B;&#x5EFA;&#x8FC7;&#x7A0B;">&#x4E03;&#x3001;&#x7EC4;&#x4EF6;&#x7684;&#x521B;&#x5EFA;&#x8FC7;&#x7A0B;</h3>
+<h4 id="1-&#x56DE;&#x8D2D;&#x9996;&#x6B21;&#x6E32;&#x67D3;&#x8FC7;&#x7A0B;">1. &#x56DE;&#x8D2D;&#x9996;&#x6B21;&#x6E32;&#x67D3;&#x8FC7;&#x7A0B;</h4>
+<ul>
+<li>Vue &#x6784;&#x9020;&#x51FD;&#x6570;</li>
+<li>this._init()</li>
+<li>this.$mount()</li>
+<li>mountComponent()</li>
+<li>new Watcher() &#x6E32;&#x67D3; Watcher</li>
+<li>updateComponent()</li>
+<li>vm.render() -&gt; createElement()</li>
+<li>vm._update()</li>
+</ul>
+<h4 id="2-&#x7EC4;&#x4EF6;&#x7684;-patch-&#x8FC7;&#x7A0B;">2. &#x7EC4;&#x4EF6;&#x7684; patch &#x8FC7;&#x7A0B;</h4>
+<p>&#x5148;&#x521B;&#x5EFA;&#x7236;&#x7EC4;&#x4EF6;&#xFF0C;&#x518D;&#x521B;&#x5EFA;&#x5B50;&#x7EC4;&#x4EF6;&#x3002;</p>
+<p>&#x5148;&#x6302;&#x8F7D;&#x5B50;&#x7EC4;&#x4EF6;&#xFF0C;&#x518D;&#x6302;&#x8F7D;&#x7236;&#x7EC4;&#x4EF6;&#x3002;</p>
+<p>&#x5728; createElement() &#x51FD;&#x6570;&#x4E2D;&#x8C03;&#x7528; createComponent() &#x521B;&#x5EFA;&#x7684;&#x662F;&#x7EC4;&#x4EF6;&#x7684; VNode&#x3002;&#x7EC4;&#x4EF6;&#x5BF9;&#x8C61;&#x662F;&#x5728;&#x7EC4;&#x4EF6;&#x7684; init &#x94A9;&#x5B50;&#x51FD;&#x6570;&#x4E2D;&#x521B;&#x5EFA;&#x7684;&#xFF0C;&#x7136;&#x540E;&#x5728; patch() --&gt; createElm() --&gt; createComponent() &#x4E2D;&#x6302;&#x8F7D;&#x7EC4;&#x4EF6;</p>
+<p>&#x5168;&#x5C40;&#x7EC4;&#x4EF6;&#x4E4B;&#x6240;&#x4EE5;&#x53EF;&#x4EE5;&#x5728;&#x4EFB;&#x610F;&#x7EC4;&#x4EF6;&#x4E2D;&#x4F7F;&#x7528;&#x662F;&#x56E0;&#x4E3A; Vue &#x6784;&#x9020;&#x51FD;&#x6570;&#x7684;&#x9009;&#x9879;&#x88AB;&#x5408;&#x5E76;&#x5230;&#x4E86; VueComponent &#x7EC4;&#x4EF6;&#x6784;&#x9020;&#x51FD;&#x6570;&#x7684;&#x9009;&#x9879;&#x4E2D;&#x3002;</p>
+<p>&#x5C40;&#x90E8;&#x7EC4;&#x4EF6;&#x7684;&#x4F7F;&#x7528;&#x8303;&#x56F4;&#x88AB;&#x9650;&#x5236;&#x5728;&#x5F53;&#x524D;&#x7EC4;&#x4EF6;&#x5185;&#x662F;&#x56E0;&#x4E3A;&#xFF0C;&#x5728;&#x521B;&#x5EFA;&#x5F53;&#x524D;&#x7EC4;&#x4EF6;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#x4F20;&#x5165;&#x7684;&#x5C40;&#x90E8;&#x7EC4;&#x4EF6;&#x9009;&#x9879;&#xFF0C;&#x5176;&#x5B83;&#x4F4D;&#x7F6E;&#x65E0;&#x6CD5;&#x8BBF;&#x95EE;</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 目录">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"03-02-Vue源码解析","level":"1.2","depth":1,"previous":{"title":"目录","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"notes/03-02-Vue源码解析.md","mtime":"2020-08-18T08:02:47.802Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-08-18T08:52:15.696Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
