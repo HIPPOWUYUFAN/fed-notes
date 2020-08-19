@@ -1,0 +1,28 @@
+{
+  "name": "fed-notes",
+  "version": "1.0.0",
+  "description": "*  [03-02-Vue源码解析](./notes/03-02-Vue源码解析.md)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HIPPOWUYUFAN/fed-notes.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HIPPOWUYUFAN/fed-notes/issues"
+  },
+  "homepage": "https://github.com/HIPPOWUYUFAN/fed-notes#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-load-plugins": "^2.0.3"
+  }
+}
