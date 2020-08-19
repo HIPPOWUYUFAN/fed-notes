@@ -4,7 +4,7 @@ const ghPages = require('gulp-gh-pages');
 const htmlmin = require('gulp-htmlmin');
 
 const deploy = () => {
-  return src('./_book/**/*')
+  return src(['./_book/gitbook/**/*', './_book/images/**/*', './_book/notes/**/*', './_book/index.html', './_book/search_index.json'])
     .pipe(ghPages());
 };
 
