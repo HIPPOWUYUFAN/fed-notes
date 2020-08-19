@@ -3,12 +3,9 @@ const plugins = require('gulp-load-plugins')();
 const ghPages = require('gulp-gh-pages');
 const htmlmin = require('gulp-htmlmin');
 
-const publish = () => {
+const deploy = () => {
   return src('./_book/**/*')
-    .pipe(ghPages({
-      origin: 'origin',
-      branch: 'gh-pages'
-    }));
+    .pipe(ghPages());
 };
 
 const minify = () => {
@@ -16,11 +13,11 @@ const minify = () => {
     .pipe(htmlmin({ collapseWhitespace: true }))
     .pipe(dest('./_book/'));
 }
-const push = series(minify, publish);
+const build = series(minify, deploy);
 module.exports = {
   minify,
-  push,
-  publish
+  deploy,
+  build,
 }
 // gulp.task('publish', () => {
 //   return gulp.src('./_book/**/*')

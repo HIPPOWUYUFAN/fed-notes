@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "push": "yarn gulp push"
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
